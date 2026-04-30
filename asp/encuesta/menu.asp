@@ -154,15 +154,15 @@ Set objRequest = Nothing
 <% if Session("currentUser") = "admin" or Session("currentUser") = "lsosa" or Session("currentUser") = "millanes" or Session("currentUser") = "sbosio" Then %>
     <% Call RenderSectionStart("FACTURA ELECTRONICA") %>
         <% if Session("currentUser") = "admin" or Session("currentUser") = "lsosa" or Session("currentUser") = "millanes" or Session("currentUser") = "sbosio" Then %>
-            <% Call RenderItem("Envio WhastApp", "./enviarwhatsapp.asp", "../images/whastapplogo2.png", "factura") %>
+            <% Call RenderItem("Envio WhastApp", "./modulos/factura_electronica/enviarwhatsapp.asp", "../images/whastapplogo2.png", "factura") %>
         <% End If %>
 
         <% if Session("currentUser") = "admin" or Session("currentUser") = "lsosa" or Session("currentUser") = "millanes" or Session("currentUser") = "sbosio" Then %>
-            <% Call RenderItem("Reenvio WhastApp", "./reenviowhatsapp.asp", "../images/reenviar.png", "factura") %>
+            <% Call RenderItem("Reenvio WhastApp", "./modulos/factura_electronica/reenviowhatsapp.asp", "../images/reenviar.png", "factura") %>
         <% End If %>
 
         <% if Session("currentUser") = "admin" or Session("currentUser") = "lsosa" or Session("currentUser") = "millanes" or Session("currentUser") = "sbosio" Then %>
-            <% Call RenderItem("Adherir Cliente", "./facturaDigital.asp", "../images/alta.png", "factura") %>
+            <% Call RenderItem("Adherir Cliente", "./modulos/factura_electronica/facturaDigital.asp", "../images/alta.png", "factura") %>
         <% End If %>
 
         <% if Session("currentUser") = "admin" or Session("currentUser") = "lsosa" or Session("currentUser") = "millanes" or Session("currentUser") = "sbosio" Then %>
