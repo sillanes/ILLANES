@@ -24,6 +24,10 @@
 .vs/
 .vscode/
 
+# Local environment files
+.env
+*.env
+
 # OS generated files
 .DS_Store
 .DS_Store?
