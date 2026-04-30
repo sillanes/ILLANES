@@ -1,0 +1,179 @@
+<%@ Language="VBScript" %>
+<!--#include file="conexion.asp" -->
+<%
+Response.CodePage = 65001
+Response.CharSet  = "UTF-8"
+
+If Session("NombreTransportista") = "" Then
+  Response.Redirect "login.asp"
+End If
+
+Dim hdrid, clienteid
+hdrid     = Request.QueryString("hdrid")
+clienteid = Request.QueryString("clienteid")
+
+If hdrid = "" Or clienteid = "" Then
+  Response.Write "Datos incompletos"
+  Response.End
+End If
+
+Dim msg
+msg = ""
+%>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Comprobantes</title>
+
+<link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+.container{max-width:900px;margin:20px auto}
+.card{border:1px solid #ddd;border-radius:6px;padding:15px;margin-bottom:20px;background:#fff}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border:1px solid #ddd;padding:8px;text-align:left}
+.table th{background:#f2f2f2}
+.btn{padding:8px 14px;border-radius:4px;border:none;cursor:pointer}
+.btn-primary{background:#007bff;color:#fff}
+.btn-secondary{background:#6c757d;color:#fff}
+.alert{padding:10px;margin-bottom:15px;border-radius:4px}
+.alert-ok{background:#d4edda;color:#155724}
+.alert-error{background:#f8d7da;color:#721c24}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>📎 Comprobantes</h2>
+<p><strong>Hoja de Ruta:</strong> <%=hdrid%> | <strong>Cliente:</strong> <%=clienteid%></p>
+
+<a href="hojaderutav3.asp?hdrid=<%=hdrid%>" class="btn btn-secondary">
+  <i class="fas fa-arrow-left"></i> Volver
+</a>
+
+<hr>
+
+<%
+' ===============================
+' SUBIDA DE ARCHIVO
+' ===============================
+If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
+
+  If Request.TotalBytes = 0 Then
+    msg = "No se recibió el archivo."
+  Else
+
+    Dim stm, binData, fileName, ext, savePath, fullPath
+
+    binData = Request.BinaryRead(Request.TotalBytes)
+
+    Set stm = Server.CreateObject("ADODB.Stream")
+    stm.Type = 1
+    stm.Open
+    stm.Write binData
+    stm.Position = 0
+
+    fileName = Request.Form("archivo")
+    ext = LCase(Mid(fileName, InStrRev(fileName, ".") + 1))
+
+    If ext <> "pdf" And ext <> "jpg" And ext <> "jpeg" And ext <> "png" Then
+      msg = "Tipo de archivo no permitido."
+    Else
+
+      savePath = "C:\Administracion\Reparto\Comprobantes\"
+      fullPath = savePath & "HDR_" & hdrid & "_CLI_" & clienteid & "_" & _
+                 Replace(Replace(Replace(Now(),":",""),"/","")," ","_") & "." & ext
+
+      stm.SaveToFile fullPath, 2
+      stm.Close
+      Set stm = Nothing
+
+      Dim sql
+      sql = "EXEC cobranza.Transportista_Comprobante_Ins " & _
+            hdrid & "," & clienteid & "," & _
+            "'" & Replace(fullPath,"'","''") & "'," & _
+            "'" & ext & "'," & _
+            "'" & Replace(Session("NombreTransportista"),"'","''") & "'"
+
+      conn.Execute sql
+
+      msg = "Archivo subido correctamente."
+    End If
+  End If
+End If
+%>
+
+<% If msg <> "" Then %>
+<div class="alert <%=IIf(InStr(msg,"correctamente")>0,"alert-ok","alert-error")%>">
+  <%=msg%>
+</div>
+<% End If %>
+
+<div class="card">
+<h3>➕ Subir nuevo comprobante</h3>
+
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="archivo" required accept=".pdf,.jpg,.jpeg,.png">
+  <br><br>
+  <button type="submit" class="btn btn-primary">
+    <i class="fas fa-upload"></i> Subir archivo
+  </button>
+</form>
+</div>
+
+<div class="card">
+<h3>📂 Comprobantes cargados</h3>
+
+<table class="table">
+<tr>
+  <th>Fecha</th>
+  <th>Archivo</th>
+  <th>Tipo</th>
+  <th>Acción</th>
+</tr>
+
+<%
+Dim rs
+Set rs = conn.Execute("EXEC cobranza.Transportista_Comprobante_Sel " & hdrid & "," & clienteid)
+
+If rs.EOF Then
+%>
+<tr><td colspan="4">No hay comprobantes cargados</td></tr>
+<%
+Else
+Do Until rs.EOF
+%>
+<tr>
+  <td><%=rs("FechaAlta")%></td>
+  <td><%=rs("Archivo")%></td>
+  <td><%=rs("Tipo")%></td>
+  <td>
+    <a href="<%=rs("Ruta")%>" target="_blank">
+      <i class="fas fa-eye"></i> Ver
+    </a>
+  </td>
+</tr>
+<%
+rs.MoveNext
+Loop
+End If
+
+rs.Close
+Set rs = Nothing
+%>
+
+</table>
+</div>
+
+</div>
+
+<%
+conn.Close
+Set conn = Nothing
+%>
+</body>
+</html>

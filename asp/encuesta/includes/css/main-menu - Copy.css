@@ -1,0 +1,163 @@
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-Italic.ttf');
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-BoldItalic.ttf');
+    font-style: italic;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-Bold.ttf');
+    font-weight: bold;
+}
+
+td.navigationBar {
+    height: 36px;
+    text-align: left;
+}
+
+td.navigationBar > table {
+    width: 100%;
+    min-width: 1280px;
+    border: none;
+    background-color: #142D4E;
+}
+
+td.navigationBar > table > tr {
+    text-align: left;
+}
+
+td.breadcrumbs {
+    width: 370px;
+	color: #fff;
+	text-align: left;
+	font-family: 'PT Sans';
+    font-size: 10pt;
+	font-weight: bold;
+}
+
+td.breadcrumbs > div {
+    height: 26px;
+    background-color: #28282e;
+    width: 105%;
+    padding: 6px 0 0 20px;
+}
+
+td.breadcrumbs > div > span {
+    color: #0db4ff;
+}
+
+table.mainMenu {
+    border: none;
+    text-align: center;
+    height: 36px;
+    width: auto;
+}
+
+td.menuPadding {
+    width: 5px;
+}
+
+td.menuPaddingRight {
+    background-color: #28282e;
+    width: 300px;
+}
+
+td.menuItem {
+    background-color: #28282e;
+    width: 80px;
+    padding-bottom: 6px;
+}
+
+td.menuItem.leftCorner {
+    background: 
+        url('../../images/auris_platform_menu_leftcorner.png') center left no-repeat,
+        url('../../images/auris_platform_menu_background.png') 36px 0 no-repeat;
+}
+/* 
+ Hack for IE8-only styles
+*/
+@media \0screen {
+	td.menuItem.leftCorner {
+		background: url('../../images/auris_platform_menu_leftcorner.png') center left no-repeat;
+		position: relative;
+	}
+	
+	.black-square {
+		height: 100%;
+		width: 44px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: #28282e;
+		z-index: 0;
+	}
+	
+	td.menuItem > a.homeButton {
+		position: absolute;
+		top: 6px;
+		left: 50%;
+		margin-left: -15px;
+		z-index: 99;
+	}
+}
+/*
+ End for IE8-only styles
+*/
+td.menuItem > a {
+    height: 24px;
+    background-position: 0 -24px;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+td.menuItem > a:hover,
+td.menuItem > a.current {
+    background-position: 0 0;
+}
+
+.homeButton {
+    width: 30px;
+    background-image: url('../../images/auris_platformicons_home_bicolor.png');
+}
+
+.productManagerButton {
+    width: 34px;
+    background-image: url('../../images/auris_platformicons_retail_productmanager_bicolor.png');
+}
+
+.reportManagerButton {
+    width: 24px;
+    background-image: url('../../images/auris_platformicons_retail_reportmanager_bicolor.png');
+}
+
+.billingManagerButton {
+    width: 20px;
+    background-image: url('../../images/auris_platformicons_retail_billingmanager_bicolor.png');
+}
+
+.platformManagerButton {
+    width: 24px;
+    background-image: url('../../images/auris_platformicons_retail_platformmanager_bicolor.png');
+}
+
+.customerServiceButton {
+    width: 25px;
+    background-image: url('../../images/auris_platformicons_retail_customerservice_bicolor.png');
+}
+
+.documentationButton {
+    width: 20px;
+    background-image: url('../../images/auris_platformicons_retail_documentation_bicolor.png');
+}

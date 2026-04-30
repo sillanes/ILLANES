@@ -1,0 +1,44 @@
+.archivedCalendarContainer {
+    text-align:right; 
+    padding-right:0px;
+}
+
+.archivedCalendarInput {
+    margin-right: 0px;
+}
+
+.archivedCalendarImg {
+    vertical-align: 
+    middle !important; 
+    width: 25px !important; 
+    height: 25px !important;
+}
+
+.disabled {
+    color:#cecece;
+}
+
+#picker{
+    width:12em;
+}
+
+#picker2{
+    width:12em;
+}
+
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+	text-align:center !important;
+}
+
+.new.day.highlight {
+	background-color: red !important;
+    border-radius: 15px !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.new.day.highlight-selected {
+	background-color: yellow !important;
+    border-radius: 15px !important;
+    font-weight: bold !important;
+}

@@ -1,0 +1,311 @@
+<%@ Language="VBScript" CodePage="65001" %>
+<!--#include file="conexion.asp" -->
+<%
+Response.CodePage = 65001
+Response.CharSet  = "UTF-8"
+
+If CLng("0" & Session("Empleado_UsuarioID")) <= 0 Or CLng("0" & Session("Empleado_EmpleadoID")) <= 0 Then
+    Response.Redirect "empleado_login.asp"
+End If
+
+Function Nz(v, alt)
+    If IsNull(v) Or IsEmpty(v) Or Trim(CStr(v & "")) = "" Then
+        Nz = alt
+    Else
+        Nz = v
+    End If
+End Function
+
+Function SqlSafe(v)
+    SqlSafe = Replace(Trim(CStr(v & "")), "'", "''")
+End Function
+
+Function EstadoClase(estado)
+    Dim s
+    s = UCase(Trim(CStr(estado & "")))
+
+    Select Case s
+        Case "OK", "PROCESADO", "DISPONIBLE", "NOTIFICADO", "LEIDO", "FIRMADO"
+            EstadoClase = "ok"
+        Case "ERROR"
+            EstadoClase = "err"
+        Case "PENDIENTE", "PROCESANDO"
+            EstadoClase = "pen"
+        Case "DUPLICADO"
+            EstadoClase = "dup"
+        Case Else
+            EstadoClase = "neu"
+    End Select
+End Function
+
+Dim empleadoID, reciboid, accion, observacionFirma
+Dim msgOk, msgErr
+
+empleadoID       = CLng("0" & Session("Empleado_EmpleadoID"))
+reciboid         = CLng("0" & Request("reciboid"))
+accion           = LCase(Trim(Request("accion")))
+observacionFirma = Trim(Request("observacionfirma"))
+
+msgOk  = ""
+msgErr = ""
+
+If reciboid <= 0 Then
+    Response.Write "ReciboID inválido."
+    Response.End
+End If
+
+If accion = "leer" Then
+    conn.Execute "EXEC empleado.usp_Empleado_Recibo_MarcarLeido " & empleadoID & ", " & reciboid
+    msgOk = "Recibo marcado como leído."
+End If
+
+If accion = "firmar" Then
+    conn.Execute "EXEC empleado.usp_Empleado_Recibo_Firmar " & _
+                 "@EmpleadoID=" & empleadoID & ", " & _
+                 "@ReciboID=" & reciboid & ", " & _
+                 "@ObservacionFirma='" & SqlSafe(observacionFirma) & "'"
+    msgOk = "Recibo firmado correctamente."
+End If
+
+Dim rs
+Set rs = conn.Execute("EXEC empleado.usp_Empleado_Recibo_Detalle_Sel " & empleadoID & ", " & reciboid)
+
+If rs.EOF Then
+    Response.Write "No existe el recibo indicado o no pertenece al empleado."
+    Response.End
+End If
+%>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Portal del Empleado - Detalle recibo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="estilos.css">
+<style>
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+}
+.topbar{
+    background:#fff;
+    border-bottom:1px solid #ddd;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+}
+.topbar .titulo{
+    font-size:22px;
+    font-weight:bold;
+    color:#222;
+}
+.topbar .usuario{
+    color:#555;
+    font-size:14px;
+}
+.container{max-width:1100px;margin:20px auto;padding:0 12px;box-sizing:border-box}
+.card{border:1px solid #ddd;border-radius:10px;padding:18px;background:#fff;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:12px}
+.kpi{border:1px solid #e5e5e5;border-radius:10px;padding:12px;background:#fafafa;min-width:0}
+.kpi .lab{font-size:12px;color:#666}
+.kpi .val{font-size:18px;font-weight:bold;margin-top:4px;word-break:break-word}
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:16px}
+.info-box{border:1px solid #e5e5e5;border-radius:10px;padding:14px;background:#fff}
+.info-box h3{margin:0 0 12px 0;font-size:18px}
+.info-row{padding:8px 0;border-bottom:1px solid #f0f0f0;word-break:break-word}
+.info-row:last-child{border-bottom:none}
+.info-label{display:block;font-size:12px;color:#666;margin-bottom:3px}
+.info-value{font-size:15px;color:#222}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:bold}
+.badge.ok{background:#d4edda;color:#155724}
+.badge.err{background:#f8d7da;color:#721c24}
+.badge.pen{background:#fff3cd;color:#856404}
+.badge.dup{background:#d1ecf1;color:#0c5460}
+.badge.neu{background:#e2e3e5;color:#383d41}
+.btn{background:#2b7cff;color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px;display:inline-block;border:none;cursor:pointer}
+.btn-sec{background:#6c757d;color:#fff;text-decoration:none;padding:10px 14px;border-radius:8px;display:inline-block;border:none;cursor:pointer}
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.acciones-top{display:flex;gap:10px;flex-wrap:wrap}
+.alert-ok{background:#d4edda;color:#155724;border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.alert-error{background:#f8d7da;color:#721c24;border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.form-row{margin-top:12px}
+.form-row textarea{width:100%;min-height:100px;padding:12px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;resize:vertical}
+.acciones-recibo{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.link-pdf{word-break:break-all}
+
+@media (max-width: 900px){
+    .grid{grid-template-columns:repeat(2,minmax(160px,1fr))}
+    .info-grid{grid-template-columns:1fr}
+}
+
+@media (max-width: 768px){
+    .container{margin:12px auto;padding:0 10px}
+    .card{padding:14px}
+    .grid{grid-template-columns:1fr}
+    .kpi .val{font-size:16px}
+    .acciones-top,.acciones-recibo{width:100%}
+    .acciones-top a,
+    .acciones-recibo a,
+    .acciones-recibo button{flex:1 1 100%;text-align:center;box-sizing:border-box}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div>
+        <div class="titulo">Detalle de recibo</div>
+        <div class="usuario">
+            <strong><%=Server.HTMLEncode(Nz(Session("Empleado_Nombre"), ""))%></strong>
+            <% If Trim(CStr(Session("Empleado_Legajo") & "")) <> "" Then %>
+                - Legajo <%=Server.HTMLEncode(Session("Empleado_Legajo"))%>
+            <% End If %>
+        </div>
+    </div>
+    <div>
+        <a href="empleado_recibos.asp" class="btn-sec">Volver</a>
+        <a href="empleado_logout.asp" class="btn-sec">Cerrar sesión</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <% If msgOk <> "" Then %>
+        <div class="alert-ok"><%=Server.HTMLEncode(msgOk)%></div>
+    <% End If %>
+
+    <% If msgErr <> "" Then %>
+        <div class="alert-error"><%=Server.HTMLEncode(msgErr)%></div>
+    <% End If %>
+
+    <div class="card">
+        <div class="grid">
+            <div class="kpi">
+                <div class="lab">ReciboID</div>
+                <div class="val"><%=Nz(rs("ReciboID"), "")%></div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Período</div>
+                <div class="val"><%=Nz(rs("Periodo"), "")%></div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Estado</div>
+                <div class="val">
+                    <span class="badge <%=EstadoClase(rs("Estado"))%>"><%=Server.HTMLEncode(Nz(rs("Estado"), ""))%></span>
+                </div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Neto</div>
+                <div class="val"><%=Nz(rs("Neto"), "")%></div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Fecha pago</div>
+                <div class="val"><%=Nz(rs("FechaPago"), "")%></div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Fecha publicación</div>
+                <div class="val"><%=Nz(rs("FechaPublicacion"), "")%></div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Fecha lectura</div>
+                <div class="val"><%=Nz(rs("FechaLectura"), "")%></div>
+            </div>
+            <div class="kpi">
+                <div class="lab">Fecha firma</div>
+                <div class="val"><%=Nz(rs("FechaFirma"), "")%></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <div class="card info-box">
+            <h3>Datos del recibo</h3>
+
+            <div class="info-row">
+                <span class="info-label">Empleado</span>
+                <div class="info-value"><%=Server.HTMLEncode(Nz(rs("ApellidoNombre"), ""))%></div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Legajo</span>
+                <div class="info-value"><%=Server.HTMLEncode(Nz(rs("Legajo"), ""))%></div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">CUIL</span>
+                <div class="info-value"><%=Server.HTMLEncode(Nz(rs("CUIL"), ""))%></div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Nombre archivo</span>
+                <div class="info-value"><%=Server.HTMLEncode(Nz(rs("NombreArchivo"), ""))%></div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Ruta archivo</span>
+                <div class="info-value link-pdf"><%=Server.HTMLEncode(Nz(rs("RutaArchivo"), ""))%></div>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">Observación firma</span>
+                <div class="info-value"><%=Server.HTMLEncode(Nz(rs("ObservacionFirma"), ""))%></div>
+            </div>
+        </div>
+
+        <div class="card info-box">
+            <h3>Acciones</h3>
+
+            <div class="info-row">
+                <span class="info-label">PDF</span>
+                <div class="info-value">
+                    <%
+                    If Trim(Nz(rs("RutaArchivo"), "")) <> "" Then
+                    %>
+                        <a href="<%=Server.HTMLEncode(rs("RutaArchivo"))%>" target="_blank" class="btn">Ver PDF</a>
+                    <%
+                    Else
+                    %>
+                        No disponible
+                    <%
+                    End If
+                    %>
+                </div>
+            </div>
+
+            <div class="acciones-recibo">
+                <form method="post" action="empleado_recibo_detalle.asp" style="margin:0;">
+                    <input type="hidden" name="reciboid" value="<%=reciboid%>">
+                    <input type="hidden" name="accion" value="leer">
+                    <button type="submit" class="btn-sec">Marcar como leído</button>
+                </form>
+            </div>
+
+            <div class="form-row">
+                <form method="post" action="empleado_recibo_detalle.asp">
+                    <input type="hidden" name="reciboid" value="<%=reciboid%>">
+                    <input type="hidden" name="accion" value="firmar">
+
+                    <label for="observacionfirma" class="info-label">Observación de firma</label>
+                    <textarea name="observacionfirma" id="observacionfirma" placeholder="Podés dejar una observación opcional."></textarea>
+
+                    <div class="acciones-recibo">
+                        <button type="submit" class="btn">Firmar recibo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%
+rs.Close
+Set rs = Nothing
+conn.Close
+Set conn = Nothing
+%>
+</body>
+</html>

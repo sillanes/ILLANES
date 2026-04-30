@@ -1,0 +1,92 @@
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-Italic.ttf');
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-BoldItalic.ttf');
+    font-style: italic;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'PT Sans';
+    src: url('../fonts/PT_Sans-Web-Bold.ttf');
+    font-weight: bold;
+}
+
+table.hiddenMenuContainer {
+    width: 100%;
+    min-width: 1280px;
+}
+
+table.hiddenMenuContainer.small {
+    min-width: 837px;
+}
+
+table.hiddenMenuContainer.medium {
+    min-width: 1057px;
+}
+
+table.hiddenMenuContainer > tbody,
+table.hiddenMenuContainer > tbody > tr,
+table.hiddenMenuContainer > tbody > tr > td {
+    height: 0;
+}
+
+table.hiddenMenu {
+    width: 780px;
+}
+
+.menuDropdown {
+    width: 80px;
+}
+
+span#menuContainer > div,
+span#menuContainer > div > div > div > div {
+    background-color: transparent !important;
+}
+
+span#menuContainer > div > div > div > div {
+    font-family: 'PT Sans', 'Trebuchet MS', Arial !important;
+    font-size: 12px !important;
+}
+
+span#menuContainer > div > div > div > div > div.selected,
+span#menuContainer > div > div > div > div > div:nth-child(2n) {
+    color: #4792CF !important;
+    font-weight: bold !important;
+}
+
+span#menuContainer > div > div {
+    background-color: rgba(40, 40, 46, 0.85) !important;
+}
+
+/* 
+ Hack for IE8-only styles
+*/
+@media \0screen {
+    html {
+        height: 100%;
+    }
+    
+    span#menuContainer > div {
+        background-color: #28282e !important;
+    }
+
+    span#menuContainer > div > div > div > div,
+    span#menuContainer > div > div > div > div > div,
+    span#menuContainer > div > div > div > div > div > div {
+        width: 180px !important;
+    }
+}
+/*
+ End for IE8-only styles
+*/

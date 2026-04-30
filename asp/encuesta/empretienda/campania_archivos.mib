@@ -1,0 +1,16 @@
+<%@ Language="VBScript" %>
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Subir archivos para la campaña</h2>
+<form method="post" action="guardar_campania_archivos.asp" enctype="multipart/form-data">
+    <label>Adjunto Email:</label>
+    <input type="file" name="AdjuntoEmail"><br>
+    <label>Excel WhatsApp:</label>
+    <input type="file" name="ExcelWhatsApp"><br>
+    <label>Excel Emails:</label>
+    <input type="file" name="ExcelEmails"><br>
+    <input type="submit" value="Subir archivos">
+</form>
+</body>
+</html>

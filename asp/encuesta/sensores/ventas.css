@@ -1,0 +1,86 @@
+.header-buttons {
+    display: flex;
+    gap: 8px;              /* espacio entre botones */
+}
+
+.btn-header {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;      /* 👈 fuerza mismo ancho mínimo */
+}
+
+.btn-header i {
+    margin-right: 6px;
+}
+
+.btn-header.red {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-header.green {
+    background-color: #27ae60;
+    color: white;
+}
+
+
+.table-container { 
+    width:100%; 
+    overflow-x:auto; 
+}
+
+
+table { 
+    width:100%; 
+    border-collapse:collapse; 
+    background:#fff; 
+    margin-bottom:30px; 
+    box-shadow:0 2px 5px rgba(0,0,0,0.1); 
+    font-size:14px; 
+}
+
+th, td { 
+    padding:8px 12px; 
+    border:1px solid #ddd; 
+    text-align:center; 
+    word-wrap:break-word; 
+}
+
+th { 
+    background:#007bff; 
+    color:#fff; 
+}
+
+td:first-child, th:first-child { 
+    text-align:left; 
+}
+
+
+/* Resaltado al pasar el mouse */
+.table-container table tr:hover {
+    background-color: #f0f8ff; /* azul muy claro */
+    cursor: pointer;
+}
+.table-container table tbody tr:hover {
+    background-color: #f0f8ff;
+    cursor: pointer;
+}
+
+/* Ajustes específicos para pantallas chicas */
+@media(max-width:768px){
+    table { font-size:12px; }
+    th, td { padding:6px 8px; }
+
+    /* Ocultar algunas columnas si es necesario */
+    .telefono, .mail, .observaciones {
+        display:none;
+    }
+}

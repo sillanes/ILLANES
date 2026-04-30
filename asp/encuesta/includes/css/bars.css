@@ -1,0 +1,76 @@
+/*Styles from style.css*/
+
+progress-meter {
+  display: block;
+  height: 10px;
+  box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 1px;
+  margin-right: 2rem;
+  position: relative;
+}
+
+progress-percent {
+  display: block;
+  height: 100%;
+  border-radius: 5px;
+  width: calc(var(--progress) * 1%); 
+  background-color: IndianRed;
+  font-size: 70%;
+  color: grey;
+}
+
+progress-percent[style="--progress: 100"] {
+  background-color: MediumAquamarine;
+}
+progress-percent[style="--progress: 80"] {
+  background-color: SteelBlue;
+}
+progress-percent[style="--progress: 60"] {
+  background-color: MediumPurple;
+}
+progress-percent[style="--progress: 40"] {
+  background-color: MediumVioletRed;
+}
+
+progress-percent::after {
+  counter-reset: percent var(--progress);
+  content: counter(percent) '%';
+  position: absolute;
+  right: -2rem;
+  bottom: -0.0rem;
+}
+
+progress-percent[style="--progress: 100"]::after {
+  content: '✓';
+  right: -1rem;
+  bottom: -0.0rem;
+}
+
+
+/* define the shared tag styles */
+:where(course-tag, tutorial-tag, book-tag):before {
+  font-size: 0.8rem;
+  color: white;
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+course-tag:before {
+  background-color: MediumVioletRed;
+  content: "course";
+}
+
+tutorial-tag:before {
+  background-color: SteelBlue;
+  content: "tutorial";
+}
+
+book-tag:before {
+  background-color: MediumPurple;
+  content: "book";
+}
+
+/*
+ End for IE8-only styles
+*/

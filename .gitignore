@@ -1,0 +1,54 @@
+# ASP.NET and Classic ASP
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.svcmap
+
+# Visual Studio
+.vs/
+.vscode/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database files
+*.mdf
+*.ldf
+*.bak
+
+# Sensitive files
+includes/db_con_open_*.asp
+web.config
+basededatos/*/passwords.txt  # Assuming passwords are in files
+*.key
+*.pem
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
