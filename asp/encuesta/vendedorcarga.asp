@@ -37,7 +37,7 @@ volver         = Trim(Request("volver"))
 
 If (doWhat = "") Then doWhat = "0"
 
-If doWhat = "-1" Then Response.Redirect "../vendedores.asp"
+If doWhat = "-1" Then Response.Redirect "./menuvendedores.asp"
 
 If doWhat = "-2" Or submit_logout = "Salir" Then
     Session("currentUser") = ""
@@ -47,7 +47,7 @@ If doWhat = "-2" Or submit_logout = "Salir" Then
     Response.Redirect "../vendedores.asp"
 End If
 
-If volver = "Menu" Then Response.Redirect "../vendedores.asp"
+If volver = "Menu" Then Response.Redirect "./menuvendedores.asp"
 
 ' --- Usuario actual ---
 Dim VendedorID, VendedorNombre
@@ -106,6 +106,9 @@ If (objetivonombre = "" And Session("objetivonombre") <> "") Then objetivonombre
 <br/>
 <span class="pagetitle">Bienvenido: <%=Server.HTMLEncode(VendedorID)%> - <%=Server.HTMLEncode(VendedorNombre)%></span>
 <br/><br/>
+<form name="FMENU" method="post" action="menuvendedores.asp" style="margin:0 0 16px 0;">
+    <input type="submit" class="btn1" value="Menu" style="width:90px;">
+</form>
 
 <%
 ' =====================================================
