@@ -226,6 +226,14 @@ Set objRequest = Nothing
     <% Call RenderSectionEnd() %>
 <% End If %>
 
+<% if Session("currentUser") = "admin" or Session("currentUser") = "Administracion" or Session("currentUser") = "millanes" or Session("currentUser") = "eillanes" or Session("currentUser") = "rillanes" Then %>
+    <% Call RenderSectionStart("ADMINISTRACIÓN") %>
+        <% if Session("currentUser") = "admin" or Session("currentUser") = "Administracion" or Session("currentUser") = "millanes" or Session("currentUser") = "eillanes" or Session("currentUser") = "rillanes" Then %>
+            <% Call RenderItem("Alta Clientes", "./Administracion/home.asp", "../images/alta.png", "admin") %>
+        <% End If %>
+    <% Call RenderSectionEnd() %>
+<% End If %>
+
 <% if Session("currentUser") = "admin" or Session("currentUser") = "1001" Then %>
     <% Call RenderSectionStart("VIPO") %>
         <% Call RenderItem("Controlar Fotos", "./vendedores.asp", "../images/reporte.png", "vipo") %>
